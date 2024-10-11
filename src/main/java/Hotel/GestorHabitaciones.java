@@ -22,8 +22,8 @@ public class GestorHabitaciones {
     }
 
     // Reservar habitacion si es que esta disponible
-    public void reservarHabitacion(int numeroHabitacion, int cantidadNoches, boolean servicioAlimentacion) throws HabitacionNoDisponibleException {
-        Habitacion habitacion = buscarHabitacion(numeroHabitacion);
+    public void reservarHabitacion(int indice, int cantidadNoches, boolean servicioAlimentacion) throws HabitacionNoDisponibleException {
+        Habitacion habitacion = obtenerHabitacion(indice);
         if (!habitacion.getEstado().equals("D")) { // Si la habitación no está disponible (D)
             throw new HabitacionNoDisponibleException("La habitación no está disponible para reserva.");
         }
@@ -32,9 +32,9 @@ public class GestorHabitaciones {
         habitacion.setEstado("R"); // Cambiar estado a Reservada
     }
 
-    // After
-    public void ocuparHabitacion(int numeroHabitacion) throws Exception {
-        Habitacion habitacion = buscarHabitacion(numeroHabitacion);
+    // Ocupar habitacion si es que esta reservada
+    public void ocuparHabitacion(int indice) throws Exception {
+        Habitacion habitacion = obtenerHabitacion(indice);
         if (!habitacion.getEstado().equals("R")) { // Si la habitación no está reservada (R)
             throw new Exception("La habitación no está reservada.");
         }
@@ -42,10 +42,21 @@ public class GestorHabitaciones {
     }
 
     // Imprimir boleta y liberar habitacion
-    public void imprimirBoleta(int numeroHabitacion) {
-        Habitacion habitacion = buscarHabitacion(numeroHabitacion);
-        String boleta = habitacion.liberar();
-        System.out.println(boleta);
+    public void imprimirBoleta(int indice) {
+        Habitacion habitacion = obtenerHabitacion(indice);
+        try {
+            habitacion.liberar();
+            // other code
+        } catch (IllegalStateException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private Habitacion obtenerHabitacion(int indice) {
+        if (indice < 1 || indice > habitaciones.size()) {
+            throw new IllegalArgumentException("Índice de habitación no válido.");
+        }
+        return habitaciones.get(indice - 1); // Restar 1 porque los índices de la lista empiezan en 0
     }
 
     // Reiniciar el estado de todas las habitaciones a disponible
@@ -59,12 +70,8 @@ public class GestorHabitaciones {
         }
     }
 
-    // Buscar habitacion por numero
-    public Habitacion buscarHabitacion(int indice) {
-        if (indice < 1 || indice > habitaciones.size()) {
-            throw new IllegalArgumentException("Índice de habitación no válido.");
-        }
-        return habitaciones.get(indice - 1); // Restar 1 porque los índices de la lista empiezan en 0
+    public void liberarHabitacion(int indice) {
+        Habitacion habitacion = obtenerHabitacion(indice);
+        habitacion.setEstado("D");
     }
-
 }
