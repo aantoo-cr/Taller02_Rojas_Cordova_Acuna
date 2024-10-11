@@ -8,33 +8,43 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class GestorHabitacionesTest {
 
     @Test
-    public void testReservar() {
-        Habitacion habitacion = new Habitacion(1);
-        habitacion.reservar(3, true);
-        assertEquals("R", habitacion.getEstado());
+    public void testmostrarEstadoHabitaciones() {
+        GestorHabitaciones gestorHabitaciones = new GestorHabitaciones();
+        gestorHabitaciones.mostrarEstadoHabitaciones();
     }
 
     @Test
-public void testReservarHabitacionNoDisponible() {
-    Habitacion habitacion = new Habitacion(1);
-    habitacion.reservar(3, true);
-    assertThrows(IllegalStateException.class, () -> {
-        habitacion.reservar(2, false); // Esto debería lanzar una excepción
-    });
+    public void testreservarHabitacion() {
+        GestorHabitaciones gestorHabitaciones = new GestorHabitaciones();
+        assertThrows(HabitacionNoDisponibleException.class, () -> gestorHabitaciones.reservarHabitacion(1, 3, true)); // Esto debería lanzar una excepción
+    }
+
+    @Test
+    public void testocuparHabitacion() {
+        GestorHabitaciones gestorHabitaciones = new GestorHabitaciones();
+        assertThrows(Exception.class, () -> gestorHabitaciones.ocuparHabitacion(1)); // Esto debería lanzar una excepción
+    }
+
+@Test
+public void testimprimirBoleta() throws Exception, HabitacionNoDisponibleException {
+    GestorHabitaciones gestorHabitaciones = new GestorHabitaciones();
+    gestorHabitaciones.reservarHabitacion(1, 3, true); // Reservar la habitación antes de ocuparla
+    gestorHabitaciones.ocuparHabitacion(1); // Ocupar la habitación antes de imprimir la boleta
+    gestorHabitaciones.imprimirBoleta(1);
 }
 
     @Test
-    public void testOcupar() {
-        Habitacion habitacion = new Habitacion(1);
-        habitacion.reservar(3, true);
-        habitacion.ocupar();
-        assertEquals("OA", habitacion.getEstado());
+    public void testreiniciarHotel() {
+        GestorHabitaciones gestorHabitaciones = new GestorHabitaciones();
+        gestorHabitaciones.reiniciarHotel("resetAll");
+    }
+
+    @Test
+    public void testbuscarHabitacion() {
+        GestorHabitaciones gestorHabitaciones = new GestorHabitaciones();
+        assertEquals(1, gestorHabitaciones.buscarHabitacion(1));
     }
 
 
-    @Test
-public void testOcuparHabitacionNoReservada() {
-    Habitacion habitacion = new Habitacion(1);
-    assertThrows(IllegalStateException.class, habitacion::ocupar); // Esto debería lanzar una excepción
-}
+
 }

@@ -60,16 +60,11 @@ public class GestorHabitaciones {
     }
 
     // Buscar habitacion por numero
-    private Habitacion buscarHabitacion(int indice) {
+    public Habitacion buscarHabitacion(int indice) {
         if (indice < 1 || indice > habitaciones.size()) {
             throw new IllegalArgumentException("Índice de habitación no válido.");
         }
         return habitaciones.get(indice - 1); // Restar 1 porque los índices de la lista empiezan en 0
-    }
-
-    // Salir del programa
-    public void salir() {
-        System.out.println("Saliendo del programa...");
     }
 
 }
